@@ -86,8 +86,10 @@ public static void main(String[] args) {
         </environment>
     </environments>
   ```
+
 - 配置 user.xml
 ```
+<!--配置 user.xml 映射文件-->
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -151,7 +153,9 @@ public static void main(String[] args) {
     </insert>
 </mapper>
 ```
+
 ### 总结
+```
 #{}和${}
 #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
 ${}表示拼接符，${}接收简单类型的参数时，里面的名称必须是value
@@ -173,6 +177,7 @@ Mapper代理使用的是jdk的代理策略。
 - mapper映射文件
 在config下创建mapper目录然后创建UserMapper.xml（这是mybatis的命名规范，当然，也不是必须是这个名称）
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
+```
 
 - UserMapper.xml 配置文件：
 ```
