@@ -90,18 +90,13 @@ public static void main(String[] args) {
 
 
 ### 总结
-```
-#{}和${}
-#{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
-${}表示拼接符，${}接收简单类型的参数时，里面的名称必须是value
-${}里面的值会原样输出，不加解析（如果该参数值是字符串，有不会添加引号）
-${}存在sql注入的风险，但是有些场景下必须使用，比如排序后面会动态传入排序的列名
-- parameterType和resultType
-parameterType指定输入参数的java类型，parameterType只有一个，也就是说入参只有一个。
-resultType指定输出结果的java类型（是单条记录的java类型）
-- selectOne和selectList
-selectOne查询单个对象
-selectList查询集合对象
+- #{}和${}
+- #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
+- ${}表示拼接符，${}接收简单类型的参数时，里面的名称必须是value
+- ${}里面的值会原样输出，不加解析（如果该参数值是字符串，有不会添加引号）
+- ${}存在sql注入的风险，但是有些场景下必须使用，比如排序后面会动态传入排序的列名
+- parameterType和resultType:parameterType指定输入参数的java类型，parameterType只有一个，也就是说入参只有一个。resultType指定输出结果的java类型（是单条记录的java类型）
+- selectOne和selectList:selectOne查询单个对象;selectList查询集合对象
 ### Mapper代理的开发方式(即开发mapper接口（相当于dao接口）)
 Mapper代理使用的是jdk的代理策略。
 - Mapper代理的开发规范
