@@ -132,7 +132,25 @@ public static void main(String[] args) {
 ```
 - SqlMapConfig.xml的配置
 ```
- <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
+ <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 加载java的配置文件或者声明属性信息 -->
+    <properties resource="db.properties">
+        <property name="db.username" value="123" />
+    </properties>
+    <!-- 自定义别名 -->
+    <typeAliases>
+        <!-- 单个别名定义 -->
+        <typeAlias type="com.idsbg.mybatis.po.User" alias="user"/>
+
+        <!-- 批量别名定义（推荐） -->
+        <!-- package：指定包名称来为该包下的po类声明别名，默认的别名就是类名（首字母大小写都可） -->
+       <!-- <package name="com.idsbg.mybatis.po" />-->
+    </typeAliases>
+    <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
     <environments default="development">
         <environment id="development">
             <!-- 配置JDBC事务控制，由mybatis进行管理 -->
@@ -146,6 +164,15 @@ public static void main(String[] args) {
             </dataSource>
         </environment>
     </environments>
+    <!-- 加载映射文件 -->
+    <mappers>
+       <!-- <mapper resource="User.xml" />-->
+        <mapper resource="com/idsbg/mybatis/mapper/UserMapper.xml"/>
+        <!-- 批量加载映射文件 -->
+       <!-- <package name="com.idsbg.mybatis.mapper" />-->
+    </mappers>
+
+</configuration>
   ```
 ### 总结
 - #{}和${}
@@ -167,7 +194,7 @@ Mapper代理使用的是jdk的代理策略。
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
 
 - UserMapper.xml 配置文件：
-```
+ ```
 <!--对 mapper接口相对应的文件进行配置-->
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
@@ -258,16 +285,16 @@ sqlSession内部的数据区域本身就是一级缓存，是通过map来存储�
     </select>
 
 </mapper>
-```
+  ```
 - 加载映射文件
-```
+  ```
 <!-- 加载映射文件 -->
     <mappers>
        <mapper resource="com/idsbg/mybatis/mapper/UserMapper.xml"/>
         <!-- 批量加载映射文件 -->
        <!-- <package name="com.idsbg.mybatis.mapper" />-->
     </mappers>
-```
+  ```
 
 ### 全局配置文件
 ```
@@ -284,51 +311,8 @@ environments（环境信息集合）
 		dataSource（数据源）
 mappers（映射器）
 ```
+
 - 加载的顺序
-```
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE configuration
-        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
-<configuration>
-    <!-- 加载java的配置文件或者声明属性信息 -->
-    <properties resource="db.properties">
-        <property name="db.username" value="123" />
-    </properties>
-    <!-- 自定义别名 -->
-    <typeAliases>
-        <!-- 单个别名定义 -->
-        <typeAlias type="com.idsbg.mybatis.po.User" alias="user"/>
-
-        <!-- 批量别名定义（推荐） -->
-        <!-- package：指定包名称来为该包下的po类声明别名，默认的别名就是类名（首字母大小写都可） -->
-       <!-- <package name="com.idsbg.mybatis.po" />-->
-    </typeAliases>
-    <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
-    <environments default="development">
-        <environment id="development">
-            <!-- 配置JDBC事务控制，由mybatis进行管理 -->
-            <transactionManager type="JDBC"></transactionManager>
-            <!-- 配置数据源，采用mybatis连接池 -->
-            <dataSource type="POOLED">
-                <property name="driver" value="${db.driver}" />
-                <property name="url" value="${db.url}" />
-                <property name="username" value="${db.username}" />
-                <property name="password" value="${db.password}" />
-            </dataSource>
-        </environment>
-    </environments>
-    <!-- 加载映射文件 -->
-    <mappers>
-       <!-- <mapper resource="User.xml" />-->
-        <mapper resource="com/idsbg/mybatis/mapper/UserMapper.xml"/>
-        <!-- 批量加载映射文件 -->
-       <!-- <package name="com.idsbg.mybatis.mapper" />-->
-    </mappers>
-
-</configuration>
-
-```
 1. 先加载properties中property标签声明的属性
 2. 再加载properties标签引入的java配置文件中的属性
 3. parameterType的值会和properties的属性值发生冲突。
