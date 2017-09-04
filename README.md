@@ -181,8 +181,8 @@ Mapper代理使用的是jdk的代理策略。
 - mapper映射文件
 在config下创建mapper目录然后创建UserMapper.xml（这是mybatis的命名规范，当然，也不是必须是这个名称）
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
+
 - UserMapper.xml 配置文件：
-```
 <!--<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -272,7 +272,7 @@ sqlSession内部的数据区域本身就是一级缓存，是通过map来存储�
     </select>
 
 </mapper>-->
-```
+
 - 加载映射文件
 ```
 <!-- 加载映射文件 -->
