@@ -1,15 +1,12 @@
 # myBatis框架内容
 
 ### mybatis的介绍
+    mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
+    Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。Mybatis会将输入参数、输出结果进行映射。
 
-    mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
-
-Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。
-
-Mybatis会将输入参数、输出结果进行映射。
-
-3	分析jdbc的问题
-3.1	原生态的jdbc代码
+### 分析jdbc的问题
+'''
+原生态的jdbc代码
 public static void main(String[] args) {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
@@ -65,6 +62,7 @@ public static void main(String[] args) {
 			}
 
 		}
+'''
 3.2	问题总结
 1、	在创建连接时，存在硬编码
 配置文件（全局配置文件）
