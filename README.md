@@ -1,8 +1,8 @@
 # myBatis框架内容
 
 ### mybatis的介绍
-    mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
-    Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。Mybatis会将输入参数、输出结果进行映射。
+mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
+Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。Mybatis会将输入参数、输出结果进行映射。
 
 #### - 分析jdbc的问题
 ```
@@ -68,7 +68,24 @@ public static void main(String[] args) {
 2. 在执行statement时存在硬编码 配置文件（映射文件）
 3. 频繁的开启和关闭数据库连接，会造成数据库性能下降。数据库连接池（全局配置文件
 ### 映射文件配置
-    在config目录下，创建User.xml（这种命名规范是由ibatis遗留下来）
+在config目录下，创建User.xml（这种命名规范是由ibatis遗留下来）
+- SqlMapConfig.xml的配置
+```
+ <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
+    <environments default="development">
+        <environment id="development">
+            <!-- 配置JDBC事务控制，由mybatis进行管理 -->
+            <transactionManager type="JDBC"></transactionManager>
+            <!-- 配置数据源，采用mybatis连接池 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driver}" />
+                <property name="url" value="${db.url}" />
+                <property name="username" value="${db.username}" />
+                <property name="password" value="${db.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+  ```
 - 配置 user.xml
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -133,34 +150,16 @@ public static void main(String[] args) {
         VALUES (#{id},#{username},#{birthday},#{sex},#{address})
     </insert>
 </mapper>
-
 ```
-```
- <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
-    <environments default="development">
-        <environment id="development">
-            <!-- 配置JDBC事务控制，由mybatis进行管理 -->
-            <transactionManager type="JDBC"></transactionManager>
-            <!-- 配置数据源，采用mybatis连接池 -->
-            <dataSource type="POOLED">
-                <property name="driver" value="${db.driver}" />
-                <property name="url" value="${db.url}" />
-                <property name="username" value="${db.username}" />
-                <property name="password" value="${db.password}" />
-            </dataSource>
-        </environment>
-    </environments>
-  ```
 - 在全局配置文件中加载映射文件
-```
 <!-- 加载映射文件 -->
-    <mappers>
+<!--
+   <mappers>
         <mapper resource="User.xml" />
     </mappers>
-```
+-->
 
 ### 总结
-```
 #{}和${}
 #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
 ${}表示拼接符，${}接收简单类型的参数时，里面的名称必须是value
@@ -172,9 +171,8 @@ resultType指定输出结果的java类型（是单条记录的java类型）
 - selectOne和selectList
 selectOne查询单个对象
 selectList查询集合对象
-```
 ### Mapper代理的开发方式(即开发mapper接口（相当于dao接口）)
-    Mapper代理使用的是jdk的代理策略。
+Mapper代理使用的是jdk的代理策略。
 - Mapper代理的开发规范
 1. mapper接口的全限定名要和mapper映射文件的namespace值一致。
 2. mapper接口的方法名称要和mapper映射文件的statement的id一致。
@@ -185,7 +183,7 @@ selectList查询集合对象
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
 - UserMapper.xml 配置文件：
 ```
-<?xml version="1.0" encoding="UTF-8" ?>
+<!--<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -273,7 +271,7 @@ sqlSession内部的数据区域本身就是一级缓存，是通过map来存储�
         Select id id_,username username_,sex sex_ from user where id = #{id}
     </select>
 
-</mapper>
+</mapper>-->
 ```
 - 加载映射文件
 ```
