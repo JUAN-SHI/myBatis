@@ -69,6 +69,67 @@ public static void main(String[] args) {
 3. 频繁的开启和关闭数据库连接，会造成数据库性能下降。数据库连接池（全局配置文件
 ### 映射文件配置
 在config目录下，创建User.xml（这种命名规范是由ibatis遗留下来）
+- 配置 user.xml
+```
+<!-- namespace：命名空间，对statement的信息进行分类管理 -->
+<!-- 注意：在mapper代理时，它具有特殊及重要的作用 -->
+<mapper namespace="test">
+     <!--根据用户ID查询用户信息--> 
+     select：表示一个MappedStatement对象 
+     id：statement的唯一标示
+     #{}：表示一个占位符？
+     #{id}：里面的id表示输入参数的参数名称，如果该参数是简单类型，那么#{}里面的参数名称可以任意
+     parameterType：输入参数的java类型
+     resultType：输出结果的所映射的java类型（单条结果所对应的java类型）
+    <select id="findUsersById" parameterType="int" resultType="com.idsbg.mybatis.po.User" >
+       SELECT * FROM USER WHERE id=#{id}
+    </select>
+
+    <!-- 根据用户名称模糊查询用户列表 -->
+    ${}：表示一个sql的连接符 
+    ${value}：里面的value表示输入参数的参数名称，如果该参数是简单类型，那么${}里面的参数名称必须是value 
+    ${}这种写法存在sql注入的风险，所以要慎用！！但是在一些场景下，必须使用${}，比如排序时，动态传入排序的列名，${}会原样输出，不加解释 
+    <select id="findUsersByName" parameterType="String" resultType="com.idsbg.mybatis.po.User">
+        SELECT * FROM  USER  WHERE username LIKE '%${value}%'
+    </select>
+
+    <!-- 添加用户 -->
+    selectKey：查询主键，在标签内需要输入查询主键的sql
+    order：指定查询主键的sql和insert语句的执行顺序，相当于insert语句来说 
+    LAST_INSERT_ID：该函数是mysql的函数，获取自增主键的ID，它必须配合insert语句一起使用 
+    <insert id="insertUser" parameterType="com.idsbg.mybatis.po.User" >
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT  LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO USER
+        (username,birthday,sex,address)
+        VALUES (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <delete id="deleteById" parameterType="int" >
+            DELETE  FROM USER WHERE id=#{id}
+    </delete>
+
+    <!-- 自增主键之UUID -->
+    <insert id="insertUser2" parameterType="com.idsbg.mybatis.po.User">
+        <selectKey keyProperty="id" resultType="string" order="BEFORE">
+            SELECT UUID()
+        </selectKey>
+        INSERT INTO USER
+        (id,username,birthday,sex,address)
+        VALUES (#{id},#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!-- 自增主键之UUID -->
+    <insert id="insertUser3" parameterType="com.idsbg.mybatis.po.User">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT seq.nextval FROM val
+        </selectKey>
+        INSERT INTO USER
+        (id,username,birthday,sex,address)
+        VALUES (#{id},#{username},#{birthday},#{sex},#{address})
+    </insert>
+</mapper>
+```
 - SqlMapConfig.xml的配置
 ```
  <!-- 配置mybatis的环境信息，与spring整合，该信息由spring来管理 -->
@@ -86,9 +147,6 @@ public static void main(String[] args) {
         </environment>
     </environments>
   ```
-
-
-
 ### 总结
 - #{}和${}
 - #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
@@ -107,7 +165,6 @@ Mapper代理使用的是jdk的代理策略。
 - mapper映射文件
 在config下创建mapper目录然后创建UserMapper.xml（这是mybatis的命名规范，当然，也不是必须是这个名称）
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
-```
 
 - UserMapper.xml 配置文件：
 ```
