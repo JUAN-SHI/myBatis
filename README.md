@@ -196,6 +196,7 @@ Mapper代理使用的是jdk的代理策略。
 在config下创建mapper目录然后创建UserMapper.xml（这是mybatis的命名规范，当然，也不是必须是这个名称）
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
 
+
 - UserMapper.xml 配置文件：
 ```
 <!--对 mapper接口相对应的文件进行配置-->
@@ -288,16 +289,19 @@ sqlSession内部的数据区域本身就是一级缓存，是通过map来存储�
     </select>
 
 </mapper>
-  ```
+```
+
+
 - 加载映射文件
-  ```
+```
 <!-- 加载映射文件 -->
     <mappers>
        <mapper resource="com/idsbg/mybatis/mapper/UserMapper.xml"/>
         <!-- 批量加载映射文件 -->
        <!-- <package name="com.idsbg.mybatis.mapper" />-->
     </mappers>
-  ```
+```
+
 
 ### 全局配置文件
 ```
@@ -315,12 +319,14 @@ environments（环境信息集合）
 mappers（映射器）
 ```
 
+
 - 加载的顺序
 1. 先加载properties中property标签声明的属性
 2. 再加载properties标签引入的java配置文件中的属性
 3. parameterType的值会和properties的属性值发生冲突。
-- typeAliases
-对po类进行别名的定义
+
+
+- typeAliases 对po类进行别名的定义
 ```
  <typeAliases>
         <!-- 单个别名定义 -->
@@ -331,6 +337,8 @@ mappers（映射器）
        <!-- <package name="com.idsbg.mybatis.po" />-->
     </typeAliases>
 ```
+
+
 - mybatis支持的别名
 ```
 别名	映射的类型
@@ -355,13 +363,15 @@ date 	Date
 decimal 	BigDecimal 
 bigdecimal 	BigDecimal 
 ```
+
+
 - 输出映射(resultType)
 1. 使用resultType进行结果映射时，需要查询出的列名和映射的对象的属性名一致，才能映射成功。
 2. 如果查询的列名和对象的属性名全部不一致，那么映射的对象为空。
 3. 如果查询的列名和对象的属性名有一个一致，那么映射的对象不为空，但是只有映射正确那一个属性才有值。
 4. 如果查询的sql的列名有别名，那么这个别名就是和属性映射的列名。
 - resultMap使用要求
->使用resultMap进行结果映射时，不需要查询的列名和映射的属性名必须一致。但是需要声明一个resultMap，来对列名和属性名进行映射。
+使用resultMap进行结果映射时，不需要查询的列名和映射的属性名必须一致。但是需要声明一个resultMap，来对列名和属性名进行映射。
 
 ### 动态sql
 在mybatis中，它提供了一些动态sql标签，可以让程序员更快的进行mybatis的开发，这些动态sql可以通过sql的可重用性。常用的动态sql标签：if标签、where标签、sql片段、foreach标签
