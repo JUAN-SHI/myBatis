@@ -151,14 +151,6 @@ public static void main(String[] args) {
     </insert>
 </mapper>
 ```
-- 在全局配置文件中加载映射文件
-<!-- 加载映射文件 -->
-<!--
-   <mappers>
-        <mapper resource="User.xml" />
-    </mappers>
--->
-
 ### 总结
 #{}和${}
 #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
@@ -183,7 +175,9 @@ Mapper代理使用的是jdk的代理策略。
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
 
 - UserMapper.xml 配置文件：
-<!--<?xml version="1.0" encoding="UTF-8" ?>
+```
+<!--对 mapper接口相对应的文件进行配置-->
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -271,8 +265,8 @@ sqlSession内部的数据区域本身就是一级缓存，是通过map来存储�
         Select id id_,username username_,sex sex_ from user where id = #{id}
     </select>
 
-</mapper>-->
-
+</mapper>
+```
 - 加载映射文件
 ```
 <!-- 加载映射文件 -->
