@@ -1,5 +1,5 @@
-Mybatis
-框架课程
+# myBatis框架内容
+
 
 1	课程计划
 1、	mybatis的介绍
