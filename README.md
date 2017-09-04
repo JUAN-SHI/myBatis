@@ -172,8 +172,10 @@ public static void main(String[] args) {
        <!-- <package name="com.idsbg.mybatis.mapper" />-->
     </mappers>
 
-</configuration>
-  ```
+</configuration> 
+```
+
+
 ### 总结
 - #{}和${}
 - #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
@@ -182,6 +184,7 @@ public static void main(String[] args) {
 - ${}存在sql注入的风险，但是有些场景下必须使用，比如排序后面会动态传入排序的列名
 - parameterType和resultType:parameterType指定输入参数的java类型，parameterType只有一个，也就是说入参只有一个。resultType指定输出结果的java类型（是单条记录的java类型）
 - selectOne和selectList:selectOne查询单个对象;selectList查询集合对象
+
 ### Mapper代理的开发方式(即开发mapper接口（相当于dao接口）)
 Mapper代理使用的是jdk的代理策略。
 - Mapper代理的开发规范
@@ -194,7 +197,7 @@ Mapper代理使用的是jdk的代理策略。
 sqlSession内部的数据区域本身就是一级缓存，是通过map来存储的。
 
 - UserMapper.xml 配置文件：
- ```
+```
 <!--对 mapper接口相对应的文件进行配置-->
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
