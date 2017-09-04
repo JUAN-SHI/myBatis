@@ -1,24 +1,8 @@
 # myBatis框架内容
 
+### mybatis的介绍
 
-1	课程计划
-1、	mybatis的介绍
-2、	mybatis的框架原理（重点）
-3、	入门程序
-订单商品案例（用户表）
-4、	Mybatis开发dao的方式（重点）
-a)	原始dao开发方式（开发dao接口和dao实现类，由ibatis遗留下来的风格）
-b)	Mapper代理的开发方式（推荐，开发mapper接口（相当于dao接口））
-5、	全局配置文件
-6、	映射文件（重点）
-a)	输入映射
-b)	输出映射
-c)	动态sql
-7、	mybatis和hibernate的区别及应用场景
-
-2	mybatis的介绍
-
-mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
+    mybatis就是一个封装来jdbc的持久层框架，它和hibernate都属于ORM框架，但是具体的说，hibernate是一个完全的orm框架，而mybatis是一个不完全的orm框架。
 
 Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。
 
