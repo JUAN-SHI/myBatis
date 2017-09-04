@@ -5,7 +5,7 @@
     Mybatis让程序员只关注sql本身，而不需要去关注如连接的创建、statement的创建等操作。Mybatis会将输入参数、输出结果进行映射。
 
 ### 分析jdbc的问题
-'''
+```
 原生态的jdbc代码
 public static void main(String[] args) {
 			Connection connection = null;
@@ -62,7 +62,7 @@ public static void main(String[] args) {
 			}
 
 		}
-'''
+```
 3.2	问题总结
 1、	在创建连接时，存在硬编码
 配置文件（全局配置文件）
