@@ -389,6 +389,213 @@ bigdecimal 	BigDecimal
 4. 程序员不能自主的去进行SQL性能优化。
 - Mybatis应用场景：需求多变的互联网项目，例如电商项目。
 - Hibernate应用场景：需求明确、业务固定的项目，例如OA项目、ERP项目等。
+### 高级结果映射（一对一、一对多、多对多）
+- 映射文件的配置
+```
+<mapper namespace="com.idsbg.mybatis.mapper.OrdersMapper">
+
+    <!-- 一对一映射之resultType -->
+    <select id="findOrdersAndUser" resultType="com.idsbg.mybatis.po.OrdersExt">
+        SELECT
+        orders.`id`,
+        orders.`user_id`,
+        orders.`number`,
+        user.`username`,
+        user.`sex`
+        FROM
+        orders,
+        USER
+        WHERE orders.`user_id` = user.`id`
+    </select>
+
+    <!-- OrdersAndUserRstMap -->
+    <resultMap type="com.idsbg.mybatis.po.OrdersExt" id="OrdersAndUserRstMap">
+        <!-- 订单信息 -->
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="number" property="number" />
+
+        <!-- 用户信息（一对一） -->
+        <!-- association：一对一关联映射 -->
+        <!-- property：关联信息查询的结果将要映射的扩展类中的对象属性名称 -->
+        <!-- id标签：建议在关联查询时必须写上，不写不会报错，但是会影响性能 -->
+        <association property="user" javaType="com.idsbg.mybatis.po.User">
+            <id column="user_id" property="id" />
+            <result column="username" property="username" />
+            <result column="sex" property="sex" />
+        </association>
+    </resultMap>
+
+    <!-- 一对一映射之resultMap -->
+    <select id="findOrdersAndUserRstMap" resultMap="OrdersAndUserRstMap">
+        SELECT
+        orders.`id`,
+        orders.`user_id`,
+        orders.`number`,
+        user.`username`,
+        user.`sex`
+        FROM
+        orders,
+        USER
+        WHERE orders.`user_id` = user.`id`
+    </select>
+
+    <!-- OrdersAndDetailRstMap -->
+    <!-- extends：可以继承一个已有的resultMap，指定resultMap的唯一标示即可 -->
+    <!-- 注意：继承时，只能继承type类型是一样的resultMap -->
+    <resultMap type="com.idsbg.mybatis.po.OrdersExt" id="OrdersAndDetailRstMap"
+               extends="OrdersAndUserRstMap">
+        <!-- 订单明细信息（一对多） -->
+        <!-- collection：映射一对多关系 -->
+        <collection property="detailList" ofType="com.idsbg.mybatis.po.Orderdetail">
+            <id column="detailId" property="id" />
+            <result column="items_id" property="itemsId" />
+            <result column="items_num" property="itemsNum" />
+        </collection>
+
+    </resultMap>
+
+    <!-- 一对多映射 -->
+    <select id="findOrdersAndDetailRstMap" resultMap="OrdersAndDetailRstMap">
+        SELECT
+        orders.`id`,
+        orders.`user_id`,
+        orders.`number`,
+        user.`username`,
+        user.`sex`,
+        orderdetail.`id` detailId,
+        orderdetail.`items_id`,
+        orderdetail.`items_num`
+        FROM
+        orders,
+        USER,
+        orderdetail
+        WHERE
+        orders.`user_id` = user.`id`
+        AND orders.`id` = orderdetail.`orders_id`
+    </select>
+
+    <!-- UserAndItemsRstMap -->
+    <resultMap type="com.idsbg.mybatis.po.User" id="UserAndItemsRstMap">
+        <!-- 用户信息 -->
+        <id column="user_id" property="id" />
+        <result column="username" property="username" />
+        <result column="sex" property="sex" />
+        <!-- 订单信息（一对多） -->
+        <collection property="orders" ofType="com.idsbg.mybatis.po.Orders">
+            <id column="id" property="id" />
+            <result column="user_id" property="userId" />
+            <result column="number" property="number" />
+            <!-- 订单明细信息（一对多） -->
+            <collection property="detailList" ofType="com.idsbg.mybatis.po.Orderdetail">
+                <id column="detailId" property="id" />
+                <result column="items_id" property="itemsId" />
+                <result column="items_num" property="itemsNum" />
+                <!-- 商品信息（一对一） -->
+                <association property="items" javaType="com.idsbg.mybatis.po.Items">
+                    <id column="items_id" property="id" />
+                    <result column="name" property="name" />
+                    <result column="price" property="price" />
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!-- 多对多 -->
+    <select id="findUserAndItemsRstMap" resultMap="UserAndItemsRstMap">
+        SELECT
+        orders.`id`,
+        orders.`user_id`,
+        orders.`number`,
+        user.`username`,
+        user.`sex`,
+        orderdetail.`id` detailId,
+        orderdetail.`items_id`,
+        orderdetail.`items_num`,
+        items.`name`,
+        items.`price`
+        FROM
+        orders,
+        USER,
+        orderdetail,
+        items
+        WHERE orders.`user_id` = user.`id`
+        AND orders.`id` =
+        orderdetail.`orders_id`
+        AND orderdetail.`items_id` = items.`id`
+    </select>
+    <!-- lazyLoadingRstMap -->
+    <resultMap type="com.idsbg.mybatis.po.OrdersExt" id="lazyLoadingRstMap">
+        <!-- 订单信息 -->
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="number" property="number" />
+        <!-- 用户信息（一对一） -->
+        <!-- select：指定关联查询的查询statement（即查询用户的statement的id），然后将查询结果，封装到property属性指定的变量中 -->
+        <!-- column：通过column指定的列所查询出的结果，作为select指的statement的入参 -->
+        <!-- 注意：如果select指定的statement，入参需要多个值，需要在column中{col1=prop1,col2=prop2} -->
+        <association property="user"
+                     select="com.idsbg.mybatis.mapper.UserMapper.findById" column="user_id">
+
+        </association>
+    </resultMap>
+
+    <!-- 延迟加载 -->
+    <select id="findOrderAndUserLazyLoading" resultMap="lazyLoadingRstMap">
+        SELECT * FROM
+        orders
+    </select>
+</mapper>
+```
+
+
+### Spring和mybatis的整合
+- applicationConfig.xml 的配置
+```
+<!-- 加载java的配置文件 -->
+    <context:property-placeholder location="db.properties" />
+
+    <!-- 创建数据源 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${db.driver}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        <property name="maxActive" value="10" />
+        <property name="maxIdle" value="5" />
+    </bean>
+
+    <!-- SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定mybatis的全局配置文件的路径 -->
+        <property name="configLocation" value="mybatis/SqlMapConfig.xml"></property>
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!-- UserDao -->
+    <bean id="userDao" class="com.idsbg.sm.dao.UserDaoImpl">
+        <!-- 依赖注入SqlSessionFactory -->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- 配置UserMapper代理类 -->
+    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <!-- 设置代理类的接口 -->
+        <property name="mapperInterface" value="com.idsbg.sm.mapper.UserMapper"></property>
+        <!-- 依赖注入SqlSessionFactory -->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- 批量配置mapper代理类，默认bean的id为类名首字母小写 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 配置扫描的包 -->
+        <property name="basePackage" value="com.idsbg.sm.mapper"></property>
+
+        <!-- 默认不需要配置SqlSessionFactory（只有一个SqlSessionFactory时），单独配置也可以 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+  ```
 
 
 
